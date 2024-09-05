@@ -108,4 +108,7 @@ class Tester:
     def get_recording(self):
         return self.recording
 
+    def get_armed(self):
+        return self.armed
+
 
