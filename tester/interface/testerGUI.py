@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 import sys
-from core.tester import Tester
+from tester.core import Tester
 
 class RedirectStdoutToTkinter:
     def __init__(self, widget):

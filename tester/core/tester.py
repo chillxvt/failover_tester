@@ -1,6 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from core.logger import logga
-from ping3 import ping, verbose_ping
+from tester.core.logger import logga
+from ping3 import ping
 import threading
 from datetime import datetime
 
