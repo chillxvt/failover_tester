@@ -33,8 +33,17 @@ class TesterGUI:
         left_frame = tk.Frame(root)
         left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ns")
 
-        # Arm/Disarm Button
-        self.toggle_button = tk.Button(left_frame, text="Arm", command=self.toggle_arm_disarm, width=15)
+        # Arm/Disarm Button (Styled: Big, Red, Bold, Impact Font)
+        self.toggle_button = tk.Button(
+            left_frame,
+            text="Arm",
+            command=self.toggle_arm_disarm,
+            width=15,
+            height=3,  # Make the button "big"
+            bg="red",  # Set background to red
+            fg="white",  # Set text color to white
+            font=("Impact", 14, "bold")  # Set font to Impact, bold, and size 14
+        )
         self.toggle_button.pack(pady=5)
 
         # Right frame for target input (10 static fields)
@@ -94,6 +103,6 @@ class TesterGUI:
     def update_toggle_button(self):
         """Update the toggle button based on the armed state."""
         if self.tester.get_armed():
-            self.toggle_button.config(text="Disarm")  # Change button to "Disarm"
+            self.toggle_button.config(text="Disarm", bg="green")  # Change button to "Disarm", green color
         else:
-            self.toggle_button.config(text="Arm")  # Change button back to "Arm"
+            self.toggle_button.config(text="Arm", bg="red")  # Change button back to "Arm", red color
