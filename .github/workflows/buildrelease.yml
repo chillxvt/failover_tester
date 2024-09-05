@@ -1,5 +1,7 @@
 name: Build and Release EXE
 
+permissions:
+  contents: write
 # Trigger workflow on push to the release branch
 on:
   push:
