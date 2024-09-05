@@ -1,16 +1,17 @@
 name: Build and Release EXE
 
 permissions:
-  contents: write
-# Trigger workflow on push to the release branch
+  contents: write  # Grant write permissions to create releases and upload artifacts
+
 on:
   push:
     branches:
-      - release  # Change this to your release branch name
+      - release  # Trigger the workflow on push to the release branch
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   build:
-    runs-on: windows-latest  # We need a Windows runner to build the .exe
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -27,20 +28,19 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
-    - name: Build the .exe using PyInstaller
+    - name: Build the .exe with custom name using PyInstaller
       run: |
-        pyinstaller --onefile --hidden-import=ping3 main.py
+        pyinstaller --onefile --name chillout_tester --hidden-import=ping3 main.py  # Custom name chillout_tester
 
-    - name: Upload built .exe as an artifact
+    - name: Upload built .exe as artifact
       uses: actions/upload-artifact@v2
       with:
         name: built-exe
-        path: dist/main.exe  # Path to your built .exe file
+        path: dist/chillout_tester.exe  # Custom path to the chillout_tester.exe
 
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/release'
 
     steps:
     - name: Download built artifact
@@ -50,12 +50,13 @@ jobs:
         path: .
 
     - name: Create GitHub Release
+      id: create_release  # Assign ID to reference its outputs
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v1.0.0  # Modify as needed or use a dynamic tag
-        release_name: "Automated Release v1.0.0"
+        tag_name: v1.0.0  # You can make this dynamic
+        release_name: "Chillout Tester Release v1.0.0"
         draft: false
         prerelease: false
 
@@ -63,6 +64,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/main.exe  # The path to the built .exe
-        asset_name: main_v1.0.0.exe  # Name of the .exe to appear in the release
+        asset_path: ./dist/chillout_tester.exe  # Use the correct path to chillout_tester.exe
+        asset_name: chillout_tester_v1.0.0.exe  # Name the .exe file in the release
         asset_content_type: application/octet-stream
