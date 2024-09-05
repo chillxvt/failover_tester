@@ -1,0 +1,66 @@
+name: Build and Release EXE
+
+# Trigger workflow on push to the release branch
+on:
+  push:
+    branches:
+      - release  # Change this to your release branch name
+
+jobs:
+  build:
+    runs-on: windows-latest  # We need a Windows runner to build the .exe
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Build the .exe using PyInstaller
+      run: |
+        pyinstaller --onefile --hidden-import=ping3 main.py
+
+    - name: Upload built .exe as an artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: built-exe
+        path: dist/main.exe  # Path to your built .exe file
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/release'
+
+    steps:
+    - name: Download built artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: built-exe
+        path: .
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.0  # Modify as needed or use a dynamic tag
+        release_name: "Automated Release v1.0.0"
+        draft: false
+        prerelease: false
+
+    - name: Upload .exe to GitHub Release
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/main.exe  # The path to the built .exe
+        asset_name: main_v1.0.0.exe  # Name of the .exe to appear in the release
+        asset_content_type: application/octet-stream
