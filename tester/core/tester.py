@@ -47,7 +47,7 @@ class Tester:
 
     def flush_targets(self, new_targets):
         if not self.reachable(new_targets):
-            raise Exception("None of the targets specified are reachable")
+            raise Exception("Some of the targets specified are not reachable")
         self.targets = new_targets
 
     # Function to ping a single target
