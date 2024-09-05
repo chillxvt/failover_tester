@@ -64,6 +64,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/chillout_tester.exe  # Use the correct path to chillout_tester.exe
-        asset_name: chillout_tester_v1.0.0.exe  # Name the .exe file in the release
+        asset_path: D:/a/failover_tester/failover_tester/dist/chillout_tester.exe  # Updated to the correct path
+        asset_name: chillout_tester_v1.0.1.exe
         asset_content_type: application/octet-stream
