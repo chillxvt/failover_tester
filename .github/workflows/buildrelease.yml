@@ -55,7 +55,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v1.0.0  # You can make this dynamic
+        tag_name: v1.0.1  # You can make this dynamic
         release_name: "Chillout Tester Release v1.0.0"
         draft: false
         prerelease: false
