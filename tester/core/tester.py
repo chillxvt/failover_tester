@@ -33,8 +33,9 @@ class Tester:
         self.run()
 
     def disarm(self):
+        if self.get_recording():
+            self.stop_recording()
         self.armed = False
-        self.stop_recording()
         self.logger.info("System disarmed.")
 
     def add_target(self, target_ip):
@@ -109,6 +110,8 @@ class Tester:
     def get_recording(self):
         return self.recording
 
+    def set_recording(self, val):
+        self.recording = val
 
     def get_armed(self):
         return self.armed
