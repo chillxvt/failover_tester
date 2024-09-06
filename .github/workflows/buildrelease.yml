@@ -57,6 +57,7 @@ jobs:
         release_name: Chillout Tester Release v1.0.0
         draft: false
         prerelease: false
+      env:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload .exe to GitHub Release
