@@ -66,3 +66,5 @@ jobs:
         asset_path: /home/runner/work/failover_tester/failover_tester/chillout_tester.exe
         asset_name: chillout_tester_v1.0.0.exe
         asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
