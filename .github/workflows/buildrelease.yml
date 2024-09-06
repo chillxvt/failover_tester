@@ -63,6 +63,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/chillout_tester.exe
+        asset_path: /home/runner/work/failover_tester/failover_tester
         asset_name: chillout_tester_v1.0.0.exe
         asset_content_type: application/octet-stream
