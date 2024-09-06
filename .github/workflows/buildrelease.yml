@@ -1,68 +1,32 @@
-name: Build and Release EXE
+release:
+  needs: build
+  runs-on: ubuntu-latest
 
-permissions:
-  contents: write  # Ensure workflow can create releases
+  steps:
+  - name: Download built artifact
+    uses: actions/download-artifact@v2
+    with:
+      name: built-exe
 
-on:
-  push:
-    branches:
-      - release
-  workflow_dispatch:  # Allows manual triggering
+  - name: Create GitHub Release
+    id: create_release
+    uses: actions/github-script@v6
+    with:
+      script: |
+        const { data: release } = await github.repos.createRelease({
+          owner: context.repo.owner,
+          repo: context.repo.repo,
+          tag_name: 'v1.0.0',
+          release_name: 'Chillout Tester Release v1.0.0',
+          draft: false,
+          prerelease: false,
+        });
+        return release.upload_url;
 
-jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
-
-    - name: Build the .exe with custom name using PyInstaller
-      run: |
-        pyinstaller --onefile --name chillout_tester --hidden-import=ping3 main.py
-
-    - name: Upload built .exe as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: built-exe
-        path: dist/chillout_tester.exe  # Path to the built executable
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest  # You don't need Windows to create a release
-
-    steps:
-    - name: Download built artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: built-exe  # Download the artifact
-
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      with:
-        tag_name: v1.0.0
-        release_name: Chillout Tester Release v1.0.0
-        draft: false
-        prerelease: false
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-
-    - name: Upload .exe to GitHub Release
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./chillout_tester.exe  # Use the relative path after downloading
-        asset_name: chillout_tester_v1.0.0.exe
-        asset_content_type: application/octet-stream
+  - name: Upload .exe to GitHub Release
+    uses: actions/upload-release-asset@v1
+    with:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      asset_path: ./chillout_tester.exe
+      asset_name: chillout_tester_v1.0.0.exe
+      asset_content_type: application/octet-stream
